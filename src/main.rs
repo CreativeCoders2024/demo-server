@@ -4,7 +4,8 @@ use axum::{
 };
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
-use tower_http::cors::CorsLayer;
+use tower_http::{cors::CorsLayer, trace::TraceLayer};
+use tracing_subscriber::filter::LevelFilter;
 
 mod auth;
 mod comments;
@@ -26,6 +27,10 @@ async fn main() {
     let pool = SqlitePool::connect(DATABASE_URL).await.unwrap();
     init_tables(&pool).await;
 
+    tracing_subscriber::fmt::fmt()
+        .with_max_level(LevelFilter::DEBUG)
+        .init();
+
     let router = Router::new()
         .route("/signup", post(auth::signup))
         .route("/login", post(auth::login))
@@ -42,6 +47,7 @@ async fn main() {
         .route("/comments/:post_id", get(comments::list_comments))
         .route("/comments", post(comments::create_comment))
         .layer(CorsLayer::permissive())
+        .layer(TraceLayer::new_for_http())
         .with_state(AppState { pool });
 
     let listener = TcpListener::bind("0.0.0.0:4000")
