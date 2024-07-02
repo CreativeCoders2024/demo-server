@@ -60,14 +60,16 @@ pub async fn login(
     State(state): State<AppState>,
     Json(body): Json<LoginBody>,
 ) -> impl IntoResponse {
-    if let Some(user) = User::find_by_id(&state.pool, &body.id).await {
-        if user.pw == body.pw {
-            let token = create_jwt(user.user_id, b"secret").unwrap();
-            return (StatusCode::OK, Json(LoginResponse { token })).into_response();
-        }
+    let Some(user) = User::find_by_id(&state.pool, &body.id).await else {
+        return StatusCode::UNAUTHORIZED.into_response();
+    };
+
+    if user.pw != body.pw {
+        return StatusCode::UNAUTHORIZED.into_response();
     }
 
-    StatusCode::UNAUTHORIZED.into_response()
+    let token = create_jwt(user.user_id, b"secret").unwrap();
+    Json(LoginResponse { token }).into_response()
 }
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
