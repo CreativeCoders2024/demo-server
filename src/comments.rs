@@ -12,13 +12,14 @@ pub async fn list_comments(
     State(state): State<AppState>,
     Path(post_id): Path<i32>,
 ) -> impl IntoResponse {
-    Json(Comment::find_by_post_id(&state.pool, post_id).await)
+    let mut comments = Comment::find_by_post_id(&state.pool, post_id).await;
+    comments.reverse();
+    Json(comments)
 }
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CreateCommentBody {
-    pub post_id: i32,
     pub content: String,
     pub group_id: i32,
 }
@@ -31,13 +32,14 @@ pub struct CreateCommentResponse {
 
 pub async fn create_comment(
     State(state): State<AppState>,
+    Path(post_id): Path<i32>,
     Auth(auth): Auth,
     Json(body): Json<CreateCommentBody>,
 ) -> impl IntoResponse {
     let comment_id = Comment::insert(
         &state.pool,
         &Comment {
-            post_id: body.post_id,
+            post_id,
             user_id: auth.sub,
             content: body.content,
             created_at: now(),
