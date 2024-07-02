@@ -45,7 +45,7 @@ async fn main() {
         .route("/posts", post(posts::create_post))
         .route("/posts", delete(posts::delete_posts))
         .route("/comments/:post_id", get(comments::list_comments))
-        .route("/comments", post(comments::create_comment))
+        .route("/comments/:post_id", post(comments::create_comment))
         .layer(CorsLayer::very_permissive())
         .layer(TraceLayer::new_for_http())
         .with_state(AppState { pool });
