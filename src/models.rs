@@ -38,6 +38,13 @@ impl User {
         .unwrap();
     }
 
+    pub async fn find_all(pool: &SqlitePool) -> Vec<User> {
+        sqlx::query_as::<_, User>("SELECT * FROM users")
+            .fetch_all(pool)
+            .await
+            .unwrap()
+    }
+
     pub async fn find_by_id(pool: &SqlitePool, id: &str) -> Option<User> {
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(id)

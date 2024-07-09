@@ -15,6 +15,10 @@ pub async fn me(State(state): State<AppState>, Auth(claims): Auth) -> impl IntoR
     }
 }
 
+pub async fn list_users(State(state): State<AppState>) -> impl IntoResponse {
+    Json(User::find_all(&state.pool).await)
+}
+
 pub async fn get_user(
     State(state): State<AppState>,
     Path(user_id): Path<i32>,

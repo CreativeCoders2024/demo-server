@@ -35,6 +35,7 @@ async fn main() {
         .route("/signup", post(auth::signup))
         .route("/login", post(auth::login))
         .route("/users/@me", get(users::me))
+        .route("/users", get(users::list_users))
         .route("/users/:user_id", get(users::get_user))
         .route("/contests", get(contests::list_contests))
         .route("/contests/:contest_id", get(contests::get_contest))
