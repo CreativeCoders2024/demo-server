@@ -189,7 +189,7 @@ pub struct Comment {
     pub content: String,
     pub created_at: i64,
     pub edited_at: Option<i64>,
-    pub group_id: i32,
+    pub parent: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, FromRow)]
@@ -202,14 +202,14 @@ pub struct CommentWithUser {
     pub content: String,
     pub created_at: i64,
     pub edited_at: Option<i64>,
-    pub group_id: i32,
+    pub parent: Option<i32>,
 }
 
 impl Comment {
     pub async fn insert(pool: &SqlitePool, comment: &Comment) -> i64 {
         sqlx::query(
             r#"
-            INSERT INTO comments (post_id, user_id, content, created_at, edited_at, group_id)
+            INSERT INTO comments (post_id, user_id, content, created_at, edited_at, parent)
             VALUES (?, ?, ?, ?, ?, ?)
             "#,
         )
@@ -218,7 +218,7 @@ impl Comment {
         .bind(&comment.content)
         .bind(comment.created_at)
         .bind(comment.edited_at)
-        .bind(comment.group_id)
+        .bind(comment.parent)
         .execute(pool)
         .await
         .unwrap()
@@ -228,7 +228,7 @@ impl Comment {
     pub async fn find_by_post_id(pool: &SqlitePool, post_id: i32) -> Vec<CommentWithUser> {
         sqlx::query_as(
             r#"
-            SELECT comments.comment_id, comments.post_id, comments.user_id, users.nickname, comments.content, comments.created_at, comments.edited_at, comments.group_id
+            SELECT comments.comment_id, comments.post_id, comments.user_id, users.nickname, comments.content, comments.created_at, comments.edited_at, comments.parent
             FROM comments
             JOIN users ON comments.user_id = users.user_id
             WHERE comments.post_id = ?

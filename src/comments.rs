@@ -21,7 +21,7 @@ pub async fn list_comments(
 #[serde(rename_all = "camelCase")]
 pub struct CreateCommentBody {
     pub content: String,
-    pub group_id: i32,
+    pub parent: Option<i32>,
 }
 
 #[derive(Serialize)]
@@ -43,7 +43,7 @@ pub async fn create_comment(
             user_id: auth.sub,
             content: body.content,
             created_at: now(),
-            group_id: body.group_id,
+            parent: body.parent,
             ..Default::default()
         },
     )

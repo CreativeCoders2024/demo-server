@@ -45,8 +45,8 @@ async fn main() {
         .route("/posts/:post_id", get(posts::get_post))
         .route("/posts", post(posts::create_post))
         .route("/posts", delete(posts::delete_posts))
-        .route("/comments/:post_id", get(comments::list_comments))
-        .route("/comments/:post_id", post(comments::create_comment))
+        .route("/posts/:post_id/comments", get(comments::list_comments))
+        .route("/posts/:post_id/comments", post(comments::create_comment))
         .layer(CorsLayer::very_permissive())
         .layer(TraceLayer::new_for_http())
         .with_state(AppState { pool });
@@ -112,7 +112,7 @@ async fn init_tables(pool: &SqlitePool) {
             content VARCHAR NOT NULL,
             created_at DATETIME NOT NULL,
             edited_at DATETIME,
-            group_id INTEGER NOT NULL,
+            parent INTEGER,
             FOREIGN KEY (post_id) REFERENCES posts(post_id),
             FOREIGN KEY (user_id) REFERENCES users(user_id)
         );
