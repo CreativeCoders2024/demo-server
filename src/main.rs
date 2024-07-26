@@ -41,6 +41,10 @@ async fn main() {
         .route("/contests/:contest_id", get(contests::get_contest))
         .route("/contests", post(contests::create_contest))
         .route("/contests", delete(contests::delete_contests))
+        .route(
+            "/contests/:contest_id/posts",
+            get(contests::list_linked_posts),
+        )
         .route("/posts", get(posts::list_posts))
         .route("/posts/:post_id", get(posts::get_post))
         .route("/posts", post(posts::create_post))

@@ -6,7 +6,11 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{auth::Auth, models::Contest, AppState};
+use crate::{
+    auth::Auth,
+    models::{Contest, Post},
+    AppState,
+};
 
 pub async fn list_contests(State(state): State<AppState>) -> impl IntoResponse {
     let contests = Contest::find_all(&state.pool).await;
@@ -78,4 +82,12 @@ pub async fn delete_contests(State(state): State<AppState>) {
         .execute(&state.pool)
         .await
         .unwrap();
+}
+
+pub async fn list_linked_posts(
+    State(state): State<AppState>,
+    Path(contest_id): Path<i32>,
+) -> impl IntoResponse {
+    let posts = Post::find_by_contest_id(&state.pool, contest_id).await;
+    Json(posts).into_response()
 }
