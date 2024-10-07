@@ -75,20 +75,20 @@ pub async fn login(
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Claims {
     pub sub: i32, // Subject (whom the token refers to)
-    pub exp: usize,
+    // pub exp: usize,
     pub iat: usize,
 }
 
 fn create_jwt(user_id: i32, secret: &[u8]) -> Result<String, jsonwebtoken::errors::Error> {
-    let expiration = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
-        + 3600; // Token expires in 1 hour
+    // let expiration = SystemTime::now()
+    //     .duration_since(UNIX_EPOCH)
+    //     .unwrap()
+    //     .as_secs()
+    //     + 3600; // Token expires in 1 hour
 
     let claims = Claims {
         sub: user_id,
-        exp: expiration as usize,
+        // exp: expiration as usize,
         iat: SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
