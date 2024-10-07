@@ -114,7 +114,7 @@ impl FromRequestParts<AppState> for Auth {
             return Err((StatusCode::UNAUTHORIZED, "Invalid `Authorization` header"));
         };
 
-        let validation = Validation::default();
+        let mut validation = Validation::default();
         validation.validate_exp = false;
         let key = DecodingKey::from_secret(b"secret");
         let Ok(token_data) = decode(token, &key, &validation) else {
