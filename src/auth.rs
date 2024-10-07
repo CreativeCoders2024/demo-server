@@ -115,6 +115,7 @@ impl FromRequestParts<AppState> for Auth {
         };
 
         let validation = Validation::default();
+        validation.validate_exp = false;
         let key = DecodingKey::from_secret(b"secret");
         let Ok(token_data) = decode(token, &key, &validation) else {
             return Err((StatusCode::UNAUTHORIZED, "Invalid token"));
