@@ -115,6 +115,7 @@ impl FromRequestParts<AppState> for Auth {
         };
 
         let mut validation = Validation::default();
+        validation.required_spec_claims.clear();
         validation.validate_exp = false;
         let key = DecodingKey::from_secret(b"secret");
         let Ok(token_data) = decode(token, &key, &validation) else {
