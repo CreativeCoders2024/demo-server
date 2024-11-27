@@ -91,7 +91,7 @@ async fn init_tables(pool: &SqlitePool) {
             link VARCHAR(1000) NOT NULL,
             field INTEGER NOT NULL,
             like_count INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(user_id)
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
 
         CREATE TABLE IF NOT EXISTS posts (
@@ -106,7 +106,7 @@ async fn init_tables(pool: &SqlitePool) {
             created_at DATETIME NOT NULL,
             ended_at DATETIME NOT NULL,
             like_count INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(user_id),
+            FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (contest_id) REFERENCES contests(contest_id)
         );
 
@@ -119,7 +119,7 @@ async fn init_tables(pool: &SqlitePool) {
             edited_at DATETIME,
             parent INTEGER,
             FOREIGN KEY (post_id) REFERENCES posts(post_id),
-            FOREIGN KEY (user_id) REFERENCES users(user_id)
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
         "#,
     )
