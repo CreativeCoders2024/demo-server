@@ -47,7 +47,7 @@ impl User {
 
     pub async fn find_by_username(pool: &SqlitePool, username: &str) -> Option<User> {
         dbg!(&username);
-        sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
+        sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = ?")
             .bind(username)
             .fetch_optional(pool)
             .await
@@ -56,7 +56,7 @@ impl User {
 
     pub async fn find_by_id(pool: &SqlitePool, id: i32) -> Option<User> {
         dbg!(&id);
-        sqlx::query_as::<_, User>("SELECT * FROM users WHERE user_id = ?")
+        sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(id)
             .fetch_optional(pool)
             .await
