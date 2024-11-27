@@ -4,9 +4,9 @@ use sqlx::{prelude::FromRow, SqlitePool};
 #[derive(Clone, Debug, Default, Deserialize, Serialize, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
-    pub user_id: i32,
-    pub id: String,
-    pub pw: String,
+    pub id: i32,
+    pub username: String,
+    pub password: String,
     pub nickname: String,
     pub email: String,
     pub bio: Option<String>,
@@ -24,8 +24,8 @@ impl User {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             "#,
         )
-        .bind(&user.id)
-        .bind(&user.pw)
+        .bind(&user.username)
+        .bind(&user.password)
         .bind(&user.nickname)
         .bind(&user.email)
         .bind(&user.bio)
@@ -45,7 +45,7 @@ impl User {
             .unwrap()
     }
 
-    pub async fn find_by_id(pool: &SqlitePool, id: &str) -> Option<User> {
+    pub async fn find_by_username(pool: &SqlitePool, id: &str) -> Option<User> {
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(id)
             .fetch_optional(pool)
@@ -53,7 +53,7 @@ impl User {
             .unwrap()
     }
 
-    pub async fn find_by_user_id(pool: &SqlitePool, user_id: i32) -> Option<User> {
+    pub async fn find_by_id(pool: &SqlitePool, user_id: i32) -> Option<User> {
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE user_id = ?")
             .bind(user_id)
             .fetch_optional(pool)

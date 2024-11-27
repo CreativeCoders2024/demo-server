@@ -14,8 +14,8 @@ use crate::{models::User, AppState};
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SignupBody {
-    id: String,
-    pw: String,
+    username: String,
+    password: String,
     nickname: String,
     email: String,
 }
@@ -24,15 +24,18 @@ pub async fn signup(
     State(state): State<AppState>,
     Json(body): Json<SignupBody>,
 ) -> impl IntoResponse {
-    if User::find_by_id(&state.pool, &body.id).await.is_some() {
+    if User::find_by_username(&state.pool, &body.username)
+        .await
+        .is_some()
+    {
         return (StatusCode::CONFLICT, "User already exists").into_response();
     }
 
     User::insert(
         &state.pool,
         &User {
-            id: body.id,
-            pw: body.pw,
+            username: body.username,
+            password: body.password,
             nickname: body.nickname,
             email: body.email,
             ..Default::default()
@@ -46,8 +49,8 @@ pub async fn signup(
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LoginBody {
-    id: String,
-    pw: String,
+    username: String,
+    password: String,
 }
 
 #[derive(Serialize)]
@@ -60,15 +63,15 @@ pub async fn login(
     State(state): State<AppState>,
     Json(body): Json<LoginBody>,
 ) -> impl IntoResponse {
-    let Some(user) = User::find_by_id(&state.pool, &body.id).await else {
+    let Some(user) = User::find_by_username(&state.pool, &body.username).await else {
         return StatusCode::UNAUTHORIZED.into_response();
     };
 
-    if user.pw != body.pw {
+    if user.password != body.password {
         return StatusCode::UNAUTHORIZED.into_response();
     }
 
-    let token = create_jwt(user.user_id, b"secret").unwrap();
+    let token = create_jwt(user.id, b"secret").unwrap();
     Json(LoginResponse { token }).into_response()
 }
 
