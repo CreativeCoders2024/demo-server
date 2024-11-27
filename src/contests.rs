@@ -38,6 +38,7 @@ pub struct CreateContestBody {
     prize: String,
     link: String,
     img: Option<String>,
+    ratio: String,
 }
 
 #[derive(Serialize)]
@@ -62,6 +63,7 @@ pub async fn create_contest(
             link: body.link,
             field: body.field,
             img: body.img,
+            ratio: body.ratio,
             ..Contest::default()
         },
     )

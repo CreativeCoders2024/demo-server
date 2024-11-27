@@ -75,6 +75,7 @@ pub struct Contest {
     pub link: String,
     pub field: i32,
     pub img: Option<String>,
+    pub ratio: String,
     pub like_count: i32,
 }
 
@@ -82,8 +83,8 @@ impl Contest {
     pub async fn insert(pool: &SqlitePool, contest: &Contest) -> i64 {
         sqlx::query(
             r#"
-            INSERT INTO contests (user_id, title, prize, started_at, ended_at, link, field, img, like_count)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO contests (user_id, title, prize, started_at, ended_at, link, field, img, ratio, like_count)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             "#,
         )
         .bind(contest.user_id)
@@ -94,6 +95,7 @@ impl Contest {
         .bind(&contest.link)
         .bind(contest.field)
         .bind(&contest.img)
+        .bind(&contest.ratio)
         .bind(contest.like_count)
         .execute(pool)
         .await

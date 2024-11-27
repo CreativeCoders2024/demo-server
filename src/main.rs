@@ -84,6 +84,7 @@ async fn init_tables(pool: &SqlitePool) {
             user_id INTEGER NOT NULL,
             title VARCHAR(100) NOT NULL,
             img VARCHAR(1000),
+            ratio INTEGER NOT NULL,
             prize VARCHAR(100) NOT NULL,
             started_at DATETIME NOT NULL,
             ended_at DATETIME NOT NULL,
