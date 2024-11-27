@@ -63,17 +63,14 @@ pub async fn login(
     State(state): State<AppState>,
     Json(body): Json<LoginBody>,
 ) -> impl IntoResponse {
-    dbg!(&body.username);
     let Some(user) = User::find_by_username(&state.pool, &body.username).await else {
         return StatusCode::UNAUTHORIZED.into_response();
     };
 
-    dbg!(&user.password);
     if user.password != body.password {
         return StatusCode::UNAUTHORIZED.into_response();
     }
 
-    dbg!(&user.id);
     let token = create_jwt(user.id, b"secret").unwrap();
     Json(LoginResponse { token }).into_response()
 }

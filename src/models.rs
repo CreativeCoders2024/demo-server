@@ -55,7 +55,6 @@ impl User {
     }
 
     pub async fn find_by_id(pool: &SqlitePool, id: i32) -> Option<User> {
-        dbg!(&id);
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(id)
             .fetch_optional(pool)
