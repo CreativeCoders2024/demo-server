@@ -45,17 +45,17 @@ impl User {
             .unwrap()
     }
 
-    pub async fn find_by_username(pool: &SqlitePool, id: &str) -> Option<User> {
+    pub async fn find_by_username(pool: &SqlitePool, username: &str) -> Option<User> {
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
-            .bind(id)
+            .bind(username)
             .fetch_optional(pool)
             .await
             .unwrap()
     }
 
-    pub async fn find_by_id(pool: &SqlitePool, user_id: i32) -> Option<User> {
+    pub async fn find_by_id(pool: &SqlitePool, id: i32) -> Option<User> {
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE user_id = ?")
-            .bind(user_id)
+            .bind(id)
             .fetch_optional(pool)
             .await
             .unwrap()
