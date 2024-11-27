@@ -67,9 +67,9 @@ async fn init_tables(pool: &SqlitePool) {
     sqlx::query(
         r#"
         CREATE TABLE IF NOT EXISTS users (
-            user_id INTEGER PRIMARY KEY,
-            id VARCHAR(10) NOT NULL,
-            pw VARCHAR(20) NOT NULL,
+            id INTEGER PRIMARY KEY,
+            username VARCHAR(10) NOT NULL,
+            password VARCHAR(20) NOT NULL,
             nickname VARCHAR(10) NOT NULL,
             email VARCHAR(100) NOT NULL,
             bio VARCHAR(1000),
