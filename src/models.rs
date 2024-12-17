@@ -233,7 +233,7 @@ impl Comment {
             r#"
             SELECT comments.comment_id, comments.post_id, comments.user_id, users.nickname, comments.content, comments.created_at, comments.edited_at, comments.parent
             FROM comments
-            JOIN users ON comments.user_id = users.user_id
+            JOIN users ON comments.user_id = users.id
             WHERE comments.post_id = ?
             "#,
         )
